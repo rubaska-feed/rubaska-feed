@@ -185,7 +185,7 @@ def generate_xml(products):
                 ET.SubElement(offer, "param", name=name).text = value
 
             # Добавление product_detail по категории
-            if category_details:
+            if category:
                 for attr_name, attr_value in {
                     "Ідентифікатор_підрозділу": category["subdivision_id"],
                     "Посилання_підрозділу": category["portal_url"],
