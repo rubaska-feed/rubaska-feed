@@ -140,7 +140,7 @@ def generate_xml(products):
             ET.SubElement(offer, "country").text = "Туреччина"
             ET.SubElement(offer, "param", name="Колір").text = color
             ET.SubElement(offer, "param", name="Розмір").text = size
-            ET.SubElement(offer, "param", name="Тип сорочкового коміра").text = collar_type
+            ET.SubElement(offer, "param", name="Тип сорочкового коміра").text = collar
 
             ET.SubElement(offer, "param", name="Міжнародний розмір").text = size
             ET.SubElement(offer, "param", name="Стан").text = "Новий"
