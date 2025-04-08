@@ -83,6 +83,13 @@ def generate_xml(products):
         product_type = product.get("productType", "Сорочка")
         category = category_info.get(product_type, category_info["Сорочка"])
 
+        metafields = {
+            m["node"]["key"]: m["node"]["value"]
+            for m in product.get("metafields", {}).get("edges", [])
+            if m["node"]["namespace"] == "custom"
+        }
+
+
 
         for variant in product.get("variants", {}).get("edges", []):
             v = variant["node"]
