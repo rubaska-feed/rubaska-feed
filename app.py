@@ -82,12 +82,7 @@ def generate_xml(products):
     for product in products:
         product_type = product.get("productType", "Сорочка")
         category = category_info.get(product_type, category_info["Сорочка"])
-        product_type = product.get("productType", "Теніска")
-        category = category_info.get(product_type, category_info["Теніска"])
-        product_type = product.get("productType", "Футболка")
-        category = category_info.get(product_type, category_info["Футболка"])
-        product_type = product.get("productType", "Жилет")
-        category = category_info.get(product_type, category_info["Жилет"])
+
 
         for variant in product.get("variants", {}).get("edges", []):
             v = variant["node"]
