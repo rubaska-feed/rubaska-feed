@@ -137,8 +137,8 @@ def generate_xml(products):
 
             ET.SubElement(offer, "price").text = v.get("price", "0")
             ET.SubElement(offer, "currencyId").text = "UAH"
-            ET.SubElement(offer, "categoryId").text = category_id
-            ET.SubElement(offer, "portal_category_id").text = portal_category_id
+            ET.SubElement(offer, "categoryId").text = category["category_id"]
+            ET.SubElement(offer, "portal_category_id").text = category["portal_url"]
             ET.SubElement(offer, "vendor").text = product.get("vendor", "RUBASKA")
             ET.SubElement(offer, "model").text = v.get("title", "Сорочка Без моделі")
             ET.SubElement(offer, "vendorCode").text = v.get("sku") or safe_id
