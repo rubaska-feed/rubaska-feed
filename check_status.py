@@ -2,7 +2,7 @@ import requests
 import json
 
 SHOP_URL = "676c64.myshopify.com"
-TOKEN = "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"
+
 API_VERSION = "2023-10"
 
 HEADERS = {
