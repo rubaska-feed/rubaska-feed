@@ -163,11 +163,7 @@ def generate_xml(products):
             }
 
             for label, key in field_mapping.items():
-                value = ""
-                for metafield in product_metafields:
-                    if metafield.get("namespace") == "custom" and metafield.get("key") == key:
-                        value = metafield.get("value", "")
-                        break
+                value = metafields.get(key)
                 if value:
                     ET.SubElement(offer, "param", name=label).text = value
 
