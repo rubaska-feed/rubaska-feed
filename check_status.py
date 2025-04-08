@@ -1,5 +1,7 @@
 import requests
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 SHOP_URL = "676c64.myshopify.com"
 
@@ -7,7 +9,7 @@ API_VERSION = "2023-10"
 
 HEADERS = {
     "Content-Type": "application/json",
-    "X-Shopify-Access-Token": TOKEN
+    "X-Shopify-Access-Token": os.environ.get("SHOPIFY_TOKEN")
 }
 
 def check_bulk_status():
