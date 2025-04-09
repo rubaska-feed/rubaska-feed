@@ -130,8 +130,12 @@ def generate_xml(products):
 
             ET.SubElement(offer, "name").text = product["title"]
             ET.SubElement(offer, "name_ua").text = product["title"]
-            ET.SubElement(offer, "description").text = f"<![CDATA[{product.get('bodyHtml', '')}]]>"
-            ET.SubElement(offer, "description_ua").text = f"<![CDATA[{product.get('bodyHtml', '')}]]>"
+            desc = product.get("bodyHtml") or "Опис буде додано найближчим часом."
+            desc_ua = product.get("description_ua") or desc
+
+            ET.SubElement(offer, "description").text = f"<![CDATA[{desc}]]>"
+            ET.SubElement(offer, "description_ua").text = f"<![CDATA[{desc_ua}]]>"
+
             ET.SubElement(offer, "url").text = f"https://rubaska.com/products/{product['handle']}"
 
             for img in product.get("images", {}).get("edges", []):
