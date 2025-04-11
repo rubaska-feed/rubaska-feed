@@ -130,8 +130,14 @@ def generate_xml(products):
 
             ET.SubElement(offer, "name").text = product["title"]
             ET.SubElement(offer, "name_ua").text = product["title"]
-            desc = product.get("bodyHtml") or "Опис буде додано найближчим часом."
+            desc = (
+                product.get("bodyHtml")
+                or product.get("descriptionHtml")
+                or product.get("description")
+                or "Опис буде додано найближчим часом."
+            )
             desc_ua = product.get("description_ua") or desc
+
 
             ET.SubElement(offer, "description").text = f"<![CDATA[{desc}]]>"
             ET.SubElement(offer, "description_ua").text = f"<![CDATA[{desc_ua}]]>"
