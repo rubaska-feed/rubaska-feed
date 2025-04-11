@@ -111,6 +111,11 @@ def generate_xml(products):
                 "group_id": safe_id
             })
 
+            # ✅ Добавить portal_category_id
+            category_name = product.get("product_type", "Сорочка")
+            category = category_info.get(category_name, category_info["Сорочка"])
+            ET.SubElement(offer, "portal_category_id").text = category["subdivision_id"]
+
             # Добавляем тег availability
             availability_status = "in stock" if available == "true" else "out of stock"
             ET.SubElement(offer, "{http://base.google.com/ns/1.0}availability").text = availability_status
