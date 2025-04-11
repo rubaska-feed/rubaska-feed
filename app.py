@@ -35,7 +35,7 @@ def generate_xml(products):
     ET.SubElement(channel, "g:description").text = "RSS 2.0 product data feed"
 
     for product in products:
-        product_type = product.get("productType", "Сорочка")
+        product_type = product.get("productType") or metafields.get("product_type", "Сорочка")
         category = category_info.get(product_type, category_info["Сорочка"])
 
         metafields = {
@@ -104,12 +104,17 @@ def generate_xml(products):
                 "Стиль": "Casual",
                 "Візерунки і принти": "Без візерунків і принтів",
                 "Склад": "стретч -котон",
-                "Ідентифікатор_підрозділу": category["subdivision_id"],
-                "Посилання_підрозділу": category["portal_url"],
-                "Назва_групи": category["group_name"],
+                "Ідентифікатор_підрозділу": category_info.get(product_type, category_info["Сорочка"])["subdivision_id"],
+                "Посилання_підрозділу": category_info.get(product_type, category_info["Сорочка"])["portal_url"],
+                "Назва_групи": category_info.get(product_type, category_info["Сорочка"])["group_name"],
                 "Міжнародний розмір": size
             }
-            for key, value in details.items():
+            
+        for key, val in metafields.items():
+            if key not in ["sku", "product_type"]:
+                ET.SubElement(offer, "param", name=key.replace("_", " ").capitalize()).text = val
+
+        for key, value in details.items():
                 gpd = ET.SubElement(offer, "g:product_detail")
                 ET.SubElement(gpd, "g:attribute_name").text = key
                 ET.SubElement(gpd, "g:attribute_value").text = value
