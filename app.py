@@ -1,4 +1,3 @@
-
 from flask import Flask, Response
 import xml.etree.ElementTree as ET
 import json
@@ -35,6 +34,8 @@ def generate_xml(products):
     ET.SubElement(channel, "g:description").text = "RSS 2.0 product data feed"
 
     for product in products:
+        if product.get("status", "").lower() != "active":
+            continue
         product_type = product.get("productType", "Сорочка")
         category = category_info.get(product_type, category_info["Сорочка"])
 
@@ -120,7 +121,7 @@ def generate_xml(products):
 @app.route("/feed.xml")
 def feed():
     # Здесь должен быть импорт товаров из Shopify или фиктивные тестовые данные
-    with open("products.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
+    with open("bulk_products.jsonl", "r", encoding="utf-8") as f:
+        data = {"products": {"edges": [ {"node": json.loads(line.strip())} for line in f if line.strip() ] }}
     xml_data = generate_xml(data["products"]["edges"])
     return Response(xml_data, mimetype="application/xml")
