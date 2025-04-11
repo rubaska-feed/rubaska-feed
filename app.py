@@ -1,10 +1,11 @@
+
 from flask import Flask, Response
 import xml.etree.ElementTree as ET
 import json
+from collections import defaultdict
 
 app = Flask(__name__)
 
-# Пример структуры categories
 category_info = {
     "Сорочка": {
         "group_name": "Чоловічі сорочки",
@@ -34,8 +35,6 @@ def generate_xml(products):
     ET.SubElement(channel, "g:description").text = "RSS 2.0 product data feed"
 
     for product in products:
-        if product.get("status", "").lower() != "active":
-            continue
         product_type = product.get("productType", "Сорочка")
         category = category_info.get(product_type, category_info["Сорочка"])
 
@@ -120,8 +119,28 @@ def generate_xml(products):
 
 @app.route("/feed.xml")
 def feed():
-    # Здесь должен быть импорт товаров из Shopify или фиктивные тестовые данные
+    grouped = defaultdict(lambda: {"variants": [], "images": []})
+    products = {}
+
     with open("bulk_products.jsonl", "r", encoding="utf-8") as f:
-        data = {"products": {"edges": [ {"node": json.loads(line.strip())} for line in f if line.strip() ] }}
-    xml_data = generate_xml(data["products"]["edges"])
+        for line in f:
+            obj = json.loads(line.strip())
+            if "status" in obj:
+                products[obj["id"]] = obj
+            elif obj.get("__parentId") and "price" in obj:
+                grouped[obj["__parentId"]]["variants"].append(obj)
+            elif obj.get("__parentId") and "originalSrc" in obj:
+                grouped[obj["__parentId"]]["images"].append(obj)
+
+    final_products = []
+    for pid, product in products.items():
+        if product.get("status", "").lower() != "active":
+            continue
+        product["variants"] = {"edges": [{"node": v} for v in grouped[pid]["variants"]]}
+        product["images"] = {"edges": [{"node": {"src": img["originalSrc"]}} for img in grouped[pid]["images"]]}
+        product["metafields"] = {"edges": []}
+        final_products.append({"node": product})
+
+    xml_data = generate_xml([p["node"] for p in final_products])
     return Response(xml_data, mimetype="application/xml")
+
