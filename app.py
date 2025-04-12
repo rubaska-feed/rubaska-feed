@@ -38,7 +38,7 @@ def load_products_from_bulk(filepath):
 # ✅ Глобальный словарь с дефолтными метафилдами по категории
 default_metafields_by_category = {
     "Чоловічі сорочки": {
-        "Тип виробу": "Сорочка",
+        "Вид изделия": "Сорочка",
         "Застежка": "Гудзики",
         "Тип тканини": "Бавовна",
         "Тип крою": "Приталена",
@@ -50,7 +50,7 @@ default_metafields_by_category = {
         "Кишені": ""
     },
     "Чоловічі футболки та майки": {
-        "Вид виробу": "Футболка",
+        "Вид изделия": "Футболка",
         "Модель": "Поло",
         "Тип тканини": "Бавовна",
         "Силует": "Прямий",
@@ -61,7 +61,7 @@ default_metafields_by_category = {
         
     },
     "Святкові жилети": {
-        "Тип виробу": "Жилет",
+        "Вид изделия": "Жилет",
         "Тип тканини": "Трикотаж",
         "Тип крою": "Діловий",
         "Стиль": "Святковий",
@@ -140,7 +140,7 @@ def generate_xml(products):
             v = variant["node"]
             if not v.get("availableForSale", True):
                 continue  # Пропускаем товары, которые не в наличии
-            safe_id = str(int(v["id"].split("/")[-1]) % 2147483647)
+            safe_id = str(int(v["id"].split("/")[-1]) % 1000000000)
             title_parts = v.get("title", "").split(" / ")
             size = title_parts[0] if len(title_parts) > 0 else "M"
             color = title_parts[1] if len(title_parts) > 1 else "Невідомо"
@@ -239,7 +239,7 @@ def generate_xml(products):
 
             # Характеристики из метафилдов
             field_mapping = {
-                "Тип виробу": "product_type",
+                "Вид виробу": "product_type_raw",
                 "Застежка": "fastening",
                 "Тип тканини": "fabric_type",
                 "Тип крою": "cut_type",
@@ -256,6 +256,14 @@ def generate_xml(products):
                 value = metafields.get(key)
                 if value:
                     ET.SubElement(offer, "param", name=label).text = value
+
+            for label, key in field_mapping.items():
+                value = metafields.get(key)
+                if not value and key == "product_type_raw":
+                    value = product_type_raw  # если в метафилде пусто, но product_type_raw есть
+                if value:
+                    ET.SubElement(offer, "param", name=label).text = value
+
 
 
 
