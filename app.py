@@ -159,7 +159,7 @@ def generate_xml(products):
             # ✅ Добавить portal_category_id на основе метафилда product_type_raw или стандартного поля
             category_name = metafields.get("product_type_raw") or product.get("productType", "").strip() or "Сорочка"
             category = category_info.get(category_name, category_info["Сорочка"])
-            ET.SubElement(offer, "portal_category_id").text = category["subdivision_id"]
+    
 
 
             # Добавляем тег availability
