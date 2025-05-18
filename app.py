@@ -189,7 +189,7 @@ def generate_xml(products):
 
             ET.SubElement(offer, "price").text = v.get("price", "0")
             ET.SubElement(offer, "currencyId").text = "UAH"
-            ET.SubElement(offer, "param", name="Де знаходиться товар").text = "Одесса"
+            ET.SubElement(offer, "param", name="Де знаходиться товар").text = "Одеса"
             ET.SubElement(offer, "categoryId").text = category["category_id"]
             ET.SubElement(offer, "portal_category_id").text = category["subdivision_id"]  # категория на маркетплейсе
             ET.SubElement(offer, "portal_category_url").text = category["portal_url"]  # ссылка на маркетплейс
